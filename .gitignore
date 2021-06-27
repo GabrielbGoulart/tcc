@@ -1,3 +1,3 @@
 api/node_modules/*
 api/dist/*
-data_manager/.venv/*
+datamanager/.venv/*
