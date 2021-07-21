@@ -3,7 +3,7 @@ from datetime import datetime
 
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
-token = "i4eaV0EWJJLuEKiNGh_emX-DRBGZ1D9dS36dbHh20TERnleo-nuRGf3cH0d1zqU1XoR7ZTQ2JxWUrq_A0QU6Uw=="
+token = ""
 org = "meutcc"
 bucket = "prices"
 query = 'from(bucket: "prices")\

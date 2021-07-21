@@ -1,0 +1,14 @@
+version: '3'
+services:
+  influxdb:
+    image: quay.io/influxdb/influxdb:v2.0.3
+    volumes:
+      # Mount for influxdb data directory and configuration
+      - ".db/influxdbv2:/.influxdbv2"
+    ports:
+      - "8086:8086"
+    environment: 
+      - DOCKER_INFLUXDB_INIT_USERNAME=my-user
+      - DOCKER_INFLUXDB_INIT_PASSWORD=my-password
+      - DOCKER_INFLUXDB_INIT_ORG=ufc
+      - DOCKER_INFLUXDB_INIT_BUCKET=prices 

@@ -7,8 +7,8 @@ const settings = {
         DB_SETTINGS:{
             INFLUX:{
                 URL:'http://localhost:8086',
-                TOKEN:'i4eaV0EWJJLuEKiNGh_emX-DRBGZ1D9dS36dbHh20TERnleo-nuRGf3cH0d1zqU1XoR7ZTQ2JxWUrq_A0QU6Uw==',
-                ORG:'meutcc'
+                TOKEN:'VvspivljE2nHPMArtuXqOusd86G08q5iEY_c8MTPxUvTR6ttYAurpe2yDkz8T5Y597sLNzGndy_yewWQEVCrlA==',
+                ORG:'ufc'
             }
         }
     }

@@ -2,6 +2,7 @@
 import express from "express";
 import cors from 'cors';
 import { enviroment } from "./enviroment/enviroment";
+import * as StockRouter from './stocks/stocks.router'
 
 console.log(enviroment)
 const app = express();
@@ -16,15 +17,33 @@ app.all('/*', function (req, res, next) {
 app.options('*', cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+const routers = [StockRouter]
 
-app.get("/", (req, res) => {
-    res.send("Hello");
+
+
+const bootstrap = async (routers) => {
+  return new Promise(async (resolve) => {
+    for (const router of routers) {
+      if (!router.applyRoutes) {
+        throw new Error('Implementar Método applyRouter na classe de rota')
+      }
+      router.applyRoutes(app)
+    }
+    resolve()
+  })
+}
+
+
+bootstrap(routers)
+.then(() => {
+  console.log('teste')
+  app.listen(PORT, () => console.log(`server listening at port `+ PORT))
+  app.use((error, req, res, next) => {
+    res.status(error.status || 500)
+    res.json({
+      status: error.status,
+      message: error.message,
+      stack: error.stack
+    })
+  })
 })
-
-app.listen(PORT, (err) => {
-  if (!err) {
-    console.log(`Server is running on ${PORT}`)
-  } else {
-    console.log(err)
-  }
-});
