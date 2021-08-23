@@ -1,16 +1,14 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { interval, of } from 'rxjs';
-import {switchMap} from 'rxjs/operators'
-import { API } from '../commom';
-
-@Injectable({
-  providedIn: 'root'
+import { Component, OnInit } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { StockService } from '../stock.service';
+@Component({
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
 })
-export class PriceService {
-
-
-    stockOrders=[ "AALR3",
+export class DashboardComponent implements OnInit {
+  stock_order:any; 
+  orders= ["AALR3",
     "AAPL34",
     "ABBV34",
     "ABCB4",
@@ -557,16 +555,57 @@ export class PriceService {
     "LOGN12",
     "MYPK11",
     "MYPK12"]
-  
+  activeStocks: any = {}
+  selectedStock: string = ""
+  Object = Object
+  Array=Array
+  Math=Math
+  constructor(private stockService:StockService ,private spinner: NgxSpinnerService) { }
 
-    constructor(private http: HttpClient) { }
-    getData(bond:string) {
-      // return of(
-      //   [[ '2021-07-29T18:00:00Z', '17.88', '17.90', '17.88', '17.89' ],
-      // [ '2021-07-29T19:00:00Z', '17.88', '17.90', '17.88', '17.90' ],
-      // [ '2021-07-29T20:00:00Z', '17.88', '17.90', '17.88', '17.89' ]]
-      // )
-      return interval(5000).pipe(switchMap(() => this.http.get(`${API}/prices/${bond}`)))
-        // return this.http.get(`${API}/prices/${bond}`)
-    } 
+  ngOnInit(): void {
+    this.stock_order=this.orders
+  }
+  removeStock(sockName:string){
+    this.activeStocks = Object.keys(this.activeStocks).filter(k=>k!=sockName).reduce((a:any,c,i)=>{
+      a[c]=this.activeStocks[c]
+      return a
+    },{})
+    // const newObject:any=this.activeStocks
+    // this.activeStocks={}
+
+    // delete newObject[sockName]
+    // this.activeStocks=newObject
+    this.stock_order = this.orders.filter(s=>!Object.keys(this.activeStocks).includes(s))
+
+  }
+  arrayRows(){
+    return Array(Math.ceil(Object.keys(this.activeStocks).length/2))
+  }
+  addStock() {
+    console.log(this.selectedStock)
+    this.spinner.show()
+    const newObject:any={}
+    newObject[this.selectedStock]={ price: 0, variation: 0 }
+    this.activeStocks[this.selectedStock] = Object.assign(this.activeStocks, newObject);
+    this.stock_order = this.orders.filter(s=>!Object.keys(this.activeStocks).includes(s))
+
+    this.spinner.hide()
+    this.stockService.getWsTicks(Object.keys(this.activeStocks)).subscribe(
+      msg => {
+      console.log("msg",msg)
+      //dataEX: AFLT3 - 1628153417783 - 5.4
+      const infos = msg.split('-').map((m:String)=>m.trim())
+      let price= parseFloat(infos[2])
+      let lastPrice=this.activeStocks[infos[0]].price
+      const variation = price-lastPrice
+      console.log(infos,price,lastPrice,variation)
+      this.activeStocks[this.selectedStock]={price,variation}
+      this.spinner.hide()
+      }, // Called whenever there is a message from the server.
+      err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
+      () => console.log('complete') // Called when connection is closed (for whatever reason).
+    )
+    // newObj
+    console.log(Array(Math.ceil(Object.keys(this.activeStocks).length/2)))
+  }
 }

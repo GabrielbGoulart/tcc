@@ -1,0 +1,48 @@
+<ngx-spinner></ngx-spinner>
+  <div class="container">
+    <div class="row justify-content-md-center p-2">
+      <div class="col-3">
+        <select [(ngModel)]="selectedStock"  class="form-select" >
+          <option *ngFor="let stock of stock_order" [value]="stock"> {{stock}}</option>
+        </select>
+        <small class="form-text text-muted">Selecione o ativo que deseja monitorar.</small>
+
+      </div>
+      <div class="col-auto">
+        <button (click)="addStock()" type="submit" class="btn btn-primary mb-3">ADD ATIVO</button>
+      </div>
+    </div>
+    <div *ngIf="Object.keys(activeStocks).length"  class="row">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">ATIVO</th>
+            <th scope="col">PREÇO</th>
+            <th scope="col">Variação</th>
+            <th scope="col">Excluir</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stockName of Object.keys(activeStocks) ; let i = index">
+            <th  scope="row">{{i}}</th>
+            <td>{{stockName}}</td>
+            <td>{{activeStocks[stockName].price}}</td>
+            <td>{{activeStocks[stockName].variation}}</td>
+            <td><button (click)="removeStock(stockName)" type="button" class="btn btn-outline-danger btn-sm">X</button></td>
+            
+            
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngFor="let row of arrayRows(); let i = index" class="row p-3">
+        <div *ngIf="Object.keys(activeStocks)[(i*2)]" class="col-6 border">
+          <app-stock-graph [bond]="Object.keys(activeStocks)[(i*2)]"></app-stock-graph>
+        </div>
+        <div *ngIf="(i+1)*2 <= Object.keys(activeStocks).length" class="col-6 border">
+          <app-stock-graph [bond]="Object.keys(activeStocks)[(i*2)+1]"></app-stock-graph>
+        </div>
+    </div>
+   
+  </div>

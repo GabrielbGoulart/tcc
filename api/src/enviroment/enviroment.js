@@ -7,9 +7,20 @@ const settings = {
         DB_SETTINGS:{
             INFLUX:{
                 URL:'http://localhost:8086',
-                TOKEN:'VvspivljE2nHPMArtuXqOusd86G08q5iEY_c8MTPxUvTR6ttYAurpe2yDkz8T5Y597sLNzGndy_yewWQEVCrlA==',
+                TOKEN:'ZkZfWC_rHz2a1NqHzbtyBQCVLW_AB0WKVZ7HJeKphhQN3JRcipkoeVr6q70HnEBZs4SM121Upcb3CRUy_i5nzQ==',
                 ORG:'ufc'
+            },
+            POSTGRES:{
+                DATABASE:"homebroker",
+                URL:'localhost',
+                USER:"tcc",
+                PASSWORD:"ufc@2021",
+                PORT:5432,
+
             }
+        },
+        SECURITY:{
+            apiSecret:"tccc"
         }
     }
 }

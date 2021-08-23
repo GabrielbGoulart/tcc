@@ -5,7 +5,7 @@ import datetime
 
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
-token = "VvspivljE2nHPMArtuXqOusd86G08q5iEY_c8MTPxUvTR6ttYAurpe2yDkz8T5Y597sLNzGndy_yewWQEVCrlA=="
+token = "ZkZfWC_rHz2a1NqHzbtyBQCVLW_AB0WKVZ7HJeKphhQN3JRcipkoeVr6q70HnEBZs4SM121Upcb3CRUy_i5nzQ=="
 org = "ufc"
 bucket = "prices"
 client = InfluxDBClient(url="http://localhost:8086", token=token, org=org)

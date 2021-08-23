@@ -1,18 +1,4 @@
-<dx-chart *ngIf='dataSource'
-    id="chart"
-    [dataSource]="dataSource">
-    <dxo-argument-axis argumentType="datetime">
-    </dxo-argument-axis>
-    <dxi-value-axis position="right">
-    </dxi-value-axis>
-    <dxo-title text="Apple Stock Price"
-        subtitle="AAPL"
-    ></dxo-title>
-    <dxo-legend [visible]="false"></dxo-legend>
-    <dxo-common-series-settings
-        argumentField="date"
-        type="line">
-    </dxo-common-series-settings>
-    <dxi-series valueField="time" name="AAPL"></dxi-series>    
-   
-</dx-chart> 
+<div style="text-align:center">
+  <apx-chart [series]="options.series" [chart]="options.chart" [xaxis]="options.xaxis" [title]="options.title">
+  </apx-chart>
+</div>
