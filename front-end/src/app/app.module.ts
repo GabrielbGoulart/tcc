@@ -14,6 +14,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './login/login.component';
 import { JwtInterceptor } from './security/jwtInterceptor';
 import { OrderFormComponent } from './order-form/order-form.component';
+import { DataTablesModule } from "angular-datatables";
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,8 +35,10 @@ import { OrderFormComponent } from './order-form/order-form.component';
     NgApexchartsModule,
     FormsModule,
     NgxSpinnerModule,
+    DataTablesModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ButtonsModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

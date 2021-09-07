@@ -1,4 +1,19 @@
-<div style="text-align:center">
-  <apx-chart [series]="options.series" [chart]="options.chart" [xaxis]="options.xaxis" [title]="options.title">
-  </apx-chart>
+<div class='col'>
+
+  <div class='row'>
+  <div class="btn-group col-3">
+    <label class="btn btn-secondary" (click)="createOptions()" [(ngModel)]="group_interval" btnRadio="five" tabindex="0" role="button">5min</label>
+    <label class="btn btn-secondary" (click)="createOptions()" [(ngModel)]="group_interval" btnRadio="ten" tabindex="0" role="button">10min</label>
+    <label class="btn btn-secondary" (click)="createOptions()" [(ngModel)]="group_interval" btnRadio="dia" tabindex="0" role="button">Dia</label>
+    <label class="btn btn-secondary" (click)="createOptions()"  [(ngModel)]="group_interval" btnRadio="mes" tabindex="0" role="button">Mês</label>
+    <label class="btn btn-secondary" (click)="createOptions()"  [(ngModel)]="group_interval" btnRadio="all" tabindex="0" role="button">All</label>
+  </div>
+</div>
+  <div class='row'>
+
+    <div style="text-align:center">
+      <apx-chart [series]="options.series" [chart]="options.chart" [xaxis]="options.xaxis" [title]="options.title">
+      </apx-chart>
+    </div>
+  </div>
 </div>

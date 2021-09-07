@@ -4,7 +4,7 @@ from datetime import datetime
 
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
-token = "ZkZfWC_rHz2a1NqHzbtyBQCVLW_AB0WKVZ7HJeKphhQN3JRcipkoeVr6q70HnEBZs4SM121Upcb3CRUy_i5nzQ=="
+token = "OQLn6k2N5PV08mS1-AF_eE-hnoeSGF3Eqw5o_zJ7NNHnRMVqpQuZg1xynvWoPf5OWMOLWboTtKsPymISMDo-XA=="
 org = "ufc"
 bucket = "prices"
 client = InfluxDBClient(url="http://localhost:8086", token=token, org=org)
@@ -565,7 +565,7 @@ stock_order=[ "AALR3",
   "MYPK11",
   "MYPK12"]
 for msg in consumer:
-    print('nm')
+    print('msg',msg)
     prices = {stock_order[i]:float(v) for i,v in enumerate(msg.value.decode('utf-8').split(';'))}
     save_price(prices)
     # break

@@ -1,16 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { interval, of } from 'rxjs';
-import {switchMap} from 'rxjs/operators'
-import { API } from '../commom';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class PriceService {
-
-
-    stockOrders=[ "AALR3",
+export const stockNames =["AALR3",
     "AAPL34",
     "ABBV34",
     "ABCB4",
@@ -557,12 +545,3 @@ export class PriceService {
     "LOGN12",
     "MYPK11",
     "MYPK12"]
-  
-
-    constructor(private http: HttpClient) { }
-    getData(bond:string,interval_group:string="") {
-      interval_group=interval_group?`/${interval_group}`:""
-      return interval(5000).pipe(switchMap(() => this.http.get(`${API}/prices/${bond}${interval_group}`)))
-        // return this.http.get(`${API}/prices/${bond}`)
-    } 
-}

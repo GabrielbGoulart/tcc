@@ -2,3 +2,4 @@ api/node_modules/*
 api/dist/*
 datamanager/.venv/*
 .db/*
+node_modules

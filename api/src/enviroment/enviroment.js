@@ -7,7 +7,7 @@ const settings = {
         DB_SETTINGS:{
             INFLUX:{
                 URL:'http://localhost:8086',
-                TOKEN:'ZkZfWC_rHz2a1NqHzbtyBQCVLW_AB0WKVZ7HJeKphhQN3JRcipkoeVr6q70HnEBZs4SM121Upcb3CRUy_i5nzQ==',
+                TOKEN:'OQLn6k2N5PV08mS1-AF_eE-hnoeSGF3Eqw5o_zJ7NNHnRMVqpQuZg1xynvWoPf5OWMOLWboTtKsPymISMDo-XA==',
                 ORG:'ufc'
             },
             POSTGRES:{

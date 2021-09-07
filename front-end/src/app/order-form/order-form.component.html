@@ -1,1 +1,73 @@
-<p>order-form works!</p>
+<div class="container">
+    <div class="row mt-3 border-bottom p-2 justify-content-md-center">
+        <form [formGroup]="orderForm" class="form-inline" (ngSubmit)="createOrder()">
+            <div class="row">
+                <div class="col-4">
+                    <div class="input-group ">
+                        <select formControlName="stock" class="form-select">
+                            <option value="null">Selecione o ativo</option>
+                            <option *ngFor="let stock of stocks" [ngValue]="stock">{{stock}}
+                            </option>
+                        </select>
+
+                    </div>
+                    <small class="form-text text-muted">Ativo desejado</small>
+
+                </div>
+                <div class="col-4 ">
+                    <div class="input-group ">
+                        <input class="form-control" type="number" formControlName="target_value">
+                    </div>
+                    <small class="form-text text-muted">Valor da compra</small>
+
+                </div>
+                <div class="col-1 ">
+                    <small class="form-text text-muted">comprar a mercado</small>
+                    <input formControlName="buynow" class="form-check-input" type="checkbox" >
+
+                </div>
+                <div class="col-1 ">
+                    <button [disabled]="!orderForm.valid" type="submit" class="btn btn-primary mb-2">Comprar</button> 
+
+                </div>
+        </div>
+
+
+            <!-- <div class="form-check mb-2 mr-sm-2">
+                <input class="form-check-input" type="checkbox" id="inlineFormCheck">
+                <label class="form-check-label" for="inlineFormCheck">
+                    Remember me
+                </label>
+            </div>
+
+            <button type="submit" (click)="changeStock($event)" class="btn btn-primary mb-2">Submit</button> -->
+        </form>
+    </div>
+    <div class='row'>
+        <div class="col-9 justify-center">
+            <table datatable [dtOptions]="dtOptions" class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Valor</th>
+                        <th>Ativo</th>
+                        <th>Criado em</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="orders?.length != 0">
+                    <tr *ngFor="let order of orders">
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.target_value }}</td>
+                        <td>{{ order.stock }}</td>
+                        <td>{{ order.createdAt }}</td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="orders?.length == 0">
+                    <tr>
+                        <td colspan="3" class="no-data-available">No data!</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

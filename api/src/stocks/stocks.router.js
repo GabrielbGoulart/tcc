@@ -1,13 +1,36 @@
 import { ORDERS } from "../../dist/models"
 import { influxQueryApi } from "../databases/influx"
 import { authorize } from "../security/auth"
+import { stockNames } from "./stocksNames"
 
 async function listAllPrices(req, res, next) {
-  const bond = req.params.bond || 'TFOF11'
-  const start = req.params.start || '-1d'
-  const interval = req.params.interval || '1h'
+  try {
+    const bond = req.params.bond || 'TFOF11'
+    let start = '-1d'
+    let interval = '1h'
+    const { mode } = req.query
 
-  const query = `
+    switch (mode) {
+      case 'five':
+        start = '-1h'
+        interval = '5m'
+      break;
+      
+      case 'ten':
+        start = '-1h'
+        interval = '10m'
+      break;
+      case 'mes':
+        start = '-1mo'
+        interval = '1d'
+        break;
+      case 'all':
+        start = '-10y'
+        interval = '1mo'
+        break;
+    }
+    console.log(start,interval,mode)
+    const query = `
     first_value = from(bucket:"prices")
       |> range(start:${start})
       |> filter(fn: (r) => r.bond == "${bond}" )
@@ -49,48 +72,84 @@ async function listAllPrices(req, res, next) {
         on:["_time"]
       )`
 
-  console.log(query)
-  const result = []
-  influxQueryApi.queryRows(query, {
-    next(row, tableMeta) {
-      const o = tableMeta.toObject(row)
-      const obj_result = [o._time, o._value_first.toFixed(2), o._value_max.toFixed(2), o._value_min.toFixed(2), o._value_last.toFixed(2)]
-      console.log(obj_result)
-      result.push(obj_result)
-    },
-    error(error) {
-      res.json(error)
-      console.log('\nFinished ERROR', error)
-    },
-    complete() {
-      res.json(result)
-    },
-  })
+    console.log(query)
+    const result = []
+    influxQueryApi.queryRows(query, {
+      next(row, tableMeta) {
+        const o = tableMeta.toObject(row)
+        const obj_result = [o._time, o._value_first.toFixed(2), o._value_max.toFixed(2), o._value_min.toFixed(2), o._value_last.toFixed(2)]
+        console.log(obj_result)
+        result.push(obj_result)
+      },
+      error(error) {
+        console.log('\nFinished ERROR', error)
+        throw error
+      },
+      complete() {
+        res.json(result)
+      },
+    })
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}
+async function getLastPrice(bond) {
+  const query = `from(bucket:"prices")
+  |> range(start:-1y)
+  |> filter(fn: (r) => r.bond == "${bond}" )
+  |> sort(columns:["_time"])
+  |>limit(n:1)`
+  const data = await influxQueryApi.collectRows(query)
+  return data[0]._value
 }
 async function createOrder(req, res, next) {
   try {
     console.log(req.authenticated)
-    const { stock, target_value, buynow } = req.body
-    const {email,id} = req.authenticated
-    if (stock && buynow) {
-      await ORDERS.create({ stock, target_value, buynow ,user_id:id})
-    }else{
-      res.status(400).json({message:"parametros inválidos"})
+    let { stock, target_value, buynow } = req.body
+    const { email, id } = req.authenticated
+    const stockNameIsValid = (stock && stockNames.includes(stock))
+    const valueIsValid = (buynow == !target_value)
+    console.log(stock, target_value, buynow)
+    console.log(stockNameIsValid, valueIsValid, stockNames.includes(stock))
+    if (stockNameIsValid && valueIsValid) {
+      if (buynow) {
+        target_value = await getLastPrice(stock)
+      }
+      const result = await ORDERS.create({ stock, target_value, buynow, user_id: id })
+      res.json(result)
+    } else {
+      res.status(400).json({ message: "parametros inválidos" })
     }
   } catch (error) {
-    res.status(500).json({message: "INTERNAL ERROR"})
+    console.log(error)
+    res.status(500).json({ message: "INTERNAL ERROR" })
 
   }
 }
-async function listOrders(req,res,next){
+async function listOrders(req, res, next) {
+  try {
+    const { _limit, _sort, _page, _order, ...filters } = req.query
+    console.log(_limit, _sort, _page, _order, filters)
 
+    const orders = await ORDERS.findAndCountAll({
+      where: filters || null,
+      order: (_order && _sort) ? [[_order, _sort.toUpperCase()]] : null,
+      limit: _limit || null,
+      offset: _page || null
+    })
+    res.json(orders)
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({ message: "parametros inválidos" })
+
+  }
 }
 
 
 export const applyRoutes = (application) => {
   application.get('/prices/:bond', [authorize(), listAllPrices])
-  application.post('/order', [authorize(), createOrder])
-  application.get('/order', [authorize(), listOrders])
+  application.post('/orders', [authorize(), createOrder])
+  application.get('/orders', [authorize(), listOrders])
 
   // application.post('/contracts/:id/edit/datesign', [authorize(), editStatus])
 }
