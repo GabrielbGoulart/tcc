@@ -106,9 +106,10 @@ async function createOrder(req, res, next) {
   try {
     console.log(req.authenticated)
     let { stock, target_value, buynow } = req.body
+    buynow = !!buynow
     const { email, id } = req.authenticated
     const stockNameIsValid = (stock && stockNames.includes(stock))
-    const valueIsValid = (buynow == !target_value)
+    const valueIsValid = (!!buynow == !target_value)
     console.log(stock, target_value, buynow)
     console.log(stockNameIsValid, valueIsValid, stockNames.includes(stock))
     if (stockNameIsValid && valueIsValid) {

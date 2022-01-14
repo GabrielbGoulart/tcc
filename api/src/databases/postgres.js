@@ -9,11 +9,11 @@ export const getConnection = () => _POOL
 export const initPG = async () => {
     return new Promise(async (resolve, reject) => {
         _POOL = new Pool({
-            database: enviroment.DB_SETTINGS.POSTGRES.DATABASE,
-            host: enviroment.DB_SETTINGS.POSTGRES.URL,
-            password: enviroment.DB_SETTINGS.POSTGRES.PASSWORD,
-            port: Number(enviroment.DB_SETTINGS.POSTGRES.PORT),
-            user: enviroment.DB_SETTINGS.POSTGRES.USER,max:200
+            database: enviroment.DB_SETTINGS.POSTGRES.DATABASE || 'homebroker',
+            host: enviroment.DB_SETTINGS.POSTGRES.URL || "localhost",
+            password: enviroment.DB_SETTINGS.POSTGRES.PASSWORD||"ufc@2021",
+            port: Number(enviroment.DB_SETTINGS.POSTGRES.PORT|| "5432"),
+            user: enviroment.DB_SETTINGS.POSTGRES.USER||"tcc",max:200
         })
         const intervalId = setInterval(async () => {
             try {

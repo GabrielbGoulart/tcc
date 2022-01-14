@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { StockService } from '../stock.service';
-export const orderNames = ["AALR3",
+from kafka import KafkaConsumer
+from influxdb_client import InfluxDBClient
+from datetime import datetime
+
+consumer = KafkaConsumer('b3-simulate', bootstrap_servers='3.145.181.166:9092')
+stock_order=[ "AALR3",
   "AAPL34",
   "ABBV34",
   "ABCB4",
@@ -548,80 +550,7 @@ export const orderNames = ["AALR3",
   "LOGN12",
   "MYPK11",
   "MYPK12"]
-@Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
-})
 
-export class DashboardComponent implements OnInit {
-  stock_order: any;
-  orders = orderNames
-  activeStocks: any = {}
-  selectedStock: string = ""
-  Object = Object
-  Array = Array
-  Math = Math
-  constructor(private stockService: StockService, private spinner: NgxSpinnerService) { }
-
-  ngOnInit(): void {
-    this.stock_order = this.orders
-    for (let i = 0; i < 2; i++) {
-      console.log(i)
-
-      const newObject: any = {}
-      newObject[this.stock_order[i]] = { price: 0, variation: 0 }
-      this.activeStocks[this.stock_order[i]] = Object.assign(this.activeStocks, newObject);
-      this.stock_order = this.orders.filter(s => !Object.keys(this.activeStocks).includes(s))
-    }
-    console.log(this.activeStocks)
-    this.createTick()
-  }
-  removeStock(sockName: string) {
-    this.activeStocks = Object.keys(this.activeStocks).filter(k => k != sockName).reduce((a: any, c, i) => {
-      a[c] = this.activeStocks[c]
-      return a
-    }, {})
-    // const newObject:any=this.activeStocks
-    // this.activeStocks={}
-
-    // delete newObject[sockName]
-    // this.activeStocks=newObject
-    this.stock_order = this.orders.filter(s => !Object.keys(this.activeStocks).includes(s))
-
-  }
-  getTick() {
-
-  }
-  createTick() {
-    this.spinner.show()
-    this.stockService.getWsTicks(Object.keys(this.activeStocks)).subscribe(
-      msg => {
-        console.log("msg", msg)
-        //dataEX: AFLT3 - 1628153417783 - 5.4
-        const infos = msg.split('-').map((m: String) => m.trim())
-        const lat = (new Date().getTime() - 10800000) - Number(infos[1])
-
-        const price = parseFloat(infos[2])
-        console.log(infos[0],lat,price)
-        const lastPrice = this.activeStocks[infos[0]].price ? parseFloat(this.activeStocks[infos[0]].price) : 0
-        const variation = lastPrice == 0 ? lastPrice : price - lastPrice
-        console.log(infos, price, lastPrice, variation)
-        this.activeStocks[infos[0]] = { price, variation }
-        this.spinner.hide()
-      },
-      err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
-      () => console.log('complete') // Called when connection is closed (for whatever reason).
-    )
-  }
-  addStock() {
-    console.log('t', this.selectedStock)
-    const newObject: any = {}
-    newObject[this.selectedStock] = { price: 0, variation: 0 }
-    this.activeStocks[this.selectedStock] = Object.assign(this.activeStocks, newObject);
-    this.stock_order = this.orders.filter(s => !Object.keys(this.activeStocks).includes(s))
-    this.createTick()
-
-    // newObj
-  }
-}
+for msg in consumer:
+    prices = {stock_order[i]:float(v) for i,v in enumerate(msg.value.decode('utf-8').split(';'))}
+    print(prices)

@@ -14,6 +14,11 @@ export class StockListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    // for (let i = 0; i < 20; i++) {
+      // this.activeStocks.push(orderNames[i])
+    // }
+    this.refreshSelectableOrders()
+
   }
   arrayRows() {
     return Array(Math.ceil(this.activeStocks.length / 2))

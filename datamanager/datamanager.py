@@ -4,10 +4,10 @@ from datetime import datetime
 
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
-token = "OQLn6k2N5PV08mS1-AF_eE-hnoeSGF3Eqw5o_zJ7NNHnRMVqpQuZg1xynvWoPf5OWMOLWboTtKsPymISMDo-XA=="
+token = "qsLKyE7cN2nKPb1DSwU-NnA5JlriVI3bVidnoO3RsqYYzipJJFaDEiATIGK1vrSuygVS9gP4cgCejwgSsw6DuA=="
 org = "ufc"
 bucket = "prices"
-client = InfluxDBClient(url="http://localhost:8086", token=token, org=org)
+client = InfluxDBClient(url="http://172.31.8.182:8086", token=token, org=org)
 write_api = client.write_api(write_options=SYNCHRONOUS)
 print('connected')
 def save_price(prices):
@@ -16,7 +16,7 @@ def save_price(prices):
         ts.append(Point("price").tag("bond", bond).field("value", price_value))
     write_api.write(bucket=bucket,org=org,record=ts)
     print(datetime.now(), "add")
-consumer = KafkaConsumer('b3-simulate', bootstrap_servers='localhost:9092')
+consumer = KafkaConsumer('b3-simulate', bootstrap_servers='172.31.17.45:9092')
 stock_order=[ "AALR3",
   "AAPL34",
   "ABBV34",

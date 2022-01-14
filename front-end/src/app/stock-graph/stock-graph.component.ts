@@ -56,8 +56,6 @@ export class StockGraphComponent implements OnInit, OnChanges, OnDestroy {
     };
   }
 
-
-
   ngOnChanges(changes: any) {
     this.createOptions()
   }
@@ -82,6 +80,7 @@ export class StockGraphComponent implements OnInit, OnChanges, OnDestroy {
       }
     };
     this.objectSource = interval(5000).pipe(mergeMap(() => this.http.get(`${API}/prices/${this.bond}?mode=${this.group_interval}`))).subscribe((res: any) => {
+      console.log(res)
       this.spinner.hide()
       this.dataSource = res;
       console.log(this.bond, this.dataSource)
@@ -90,7 +89,6 @@ export class StockGraphComponent implements OnInit, OnChanges, OnDestroy {
 
   }
   ngOnDestroy() {
-    console.log('DESTROYED')
     this.objectSource.unsubscribe()
   }
   ngOnInit(): void {
