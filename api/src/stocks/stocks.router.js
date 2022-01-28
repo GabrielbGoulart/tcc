@@ -2,12 +2,13 @@ import { ORDERS } from "../../dist/models"
 import { influxQueryApi } from "../databases/influx"
 import { authorize } from "../security/auth"
 import { stockNames } from "./stocksNames"
-
+const BUCKET='prices_teste'
 async function listAllPrices(req, res, next) {
   try {
-    const bond = req.params.bond || 'TFOF11'
-    let start = '-1d'
-    let interval = '1h'
+    let bond = req.params.bond || 'TFOF11'
+    // bond = `${bond};`
+    let start = '-1mo'
+    let interval = '1d'
     const { mode } = req.query
 
     switch (mode) {
@@ -31,33 +32,37 @@ async function listAllPrices(req, res, next) {
     }
     console.log(start,interval,mode)
     const query = `
-    first_value = from(bucket:"prices")
+    first_value = from(bucket:"${BUCKET}")
       |> range(start:${start})
       |> filter(fn: (r) => r.bond == "${bond}" )
       |> aggregateWindow(
             every: ${interval},
-            fn: first
+            fn: first,
+            createEmpty: false
       )
-    last_value = from(bucket:"prices")
+    last_value = from(bucket:"${BUCKET}")
       |> range(start:${start})
       |> filter(fn: (r) => r.bond == "${bond}"  )
       |> aggregateWindow(
             every: ${interval},
-            fn: last
+            fn: last,
+            createEmpty: false
       )
-    min_value = from(bucket:"prices")
+    min_value = from(bucket:"${BUCKET}")
       |> range(start:${start})
       |> filter(fn: (r) => r.bond == "${bond}"  )
       |> aggregateWindow(
             every: ${interval},
-            fn: min
+            fn: min,
+            createEmpty: false
       )
-    max_value = from(bucket:"prices")
+    max_value = from(bucket:"${BUCKET}")
       |> range(start:${start})
       |> filter(fn: (r) => r.bond == "${bond}"  )
       |> aggregateWindow(
             every: ${interval},
-            fn: max
+            fn: max,
+            createEmpty: false
       )
     interval_join = join(
         tables:{first:first_value, last:last_value},
@@ -77,6 +82,7 @@ async function listAllPrices(req, res, next) {
     influxQueryApi.queryRows(query, {
       next(row, tableMeta) {
         const o = tableMeta.toObject(row)
+        console.log(o)
         const obj_result = [o._time, o._value_first.toFixed(2), o._value_max.toFixed(2), o._value_min.toFixed(2), o._value_last.toFixed(2)]
         console.log(obj_result)
         result.push(obj_result)

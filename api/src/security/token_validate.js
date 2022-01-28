@@ -6,6 +6,7 @@ export const tokenParse =  (req, res, next) => {
         const token = extractToken(req)
         if (token) {
             jwt.verify(token, enviroment.SECURITY.apiSecret, (error, decoded) => {
+                console.log(error,decoded)
                 if (decoded) {
                     const { id, email } = decoded
                     req.authenticated = { id, email }

@@ -6,8 +6,8 @@ const settings = {
         },
         DB_SETTINGS:{
             INFLUX:{
-                URL:'http://localhost:8086',
-                TOKEN:'OQLn6k2N5PV08mS1-AF_eE-hnoeSGF3Eqw5o_zJ7NNHnRMVqpQuZg1xynvWoPf5OWMOLWboTtKsPymISMDo-XA==',
+                URL:'http://ec2-34-226-136-124.compute-1.amazonaws.com:8086',
+                TOKEN:'FPKW9EzaYbH_xy_HySeJzuWRVrW8nWsT-eWUPkf_BOQ-DIQULd1HY5EPdFOokxkUuBawxCZeZ72h5uJTnP-GQw==',
                 ORG:'ufc'
             },
             POSTGRES:{
@@ -20,7 +20,7 @@ const settings = {
             }
         },
         SECURITY:{
-            apiSecret:"tccc"
+            apiSecret:"tcc"
         }
     }
 }

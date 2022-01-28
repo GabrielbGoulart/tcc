@@ -1,0 +1,9 @@
+#group,false,false,false,false,true,true,true,
+#datatype,string,long,dateTime:RFC3339,double,string,string,string
+#default,_result,,,,,,
+,result,table,_time,_value,_field,_measurement,bond
+,,0,2022-01-16T20:05:00Z,41482.0595,value,price,PEITO;
+,,0,2022-01-16T20:05:00Z,41482.0595,value,price,PEITO;
+,,0,2022-01-16T20:05:00Z,41482.0595,value,price,PEITO;
+,,0,2022-01-16T20:05:00Z,41482.0595,value,price,PEITO;
+,,0,2022-01-16T20:05:00Z,41482.0595,value,price,PEITO;

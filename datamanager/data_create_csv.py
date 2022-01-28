@@ -1,30 +1,13 @@
 ## SCRIPT PARA CRIAR VALORES ARTIFICIAIS
 import random
-from influxdb_client import InfluxDBClient
 import datetime
-import rx
-from rx import operators as ops
-from influxdb_client import InfluxDBClient, Point, WritePrecision,WriteOptions
-from influxdb_client.client.write_api import SYNCHRONOUS
-token = "FPKW9EzaYbH_xy_HySeJzuWRVrW8nWsT-eWUPkf_BOQ-DIQULd1HY5EPdFOokxkUuBawxCZeZ72h5uJTnP-GQw=="
-org = "ufc"
-bucket = "prices_teste"
-client = InfluxDBClient(url="http://ec2-34-226-136-124.compute-1.amazonaws.com:8086", timeout=3600,token=token, org=org,enable_gzip=True)
-write_api = client.write_api(write_options=SYNCHRONOUS)
-    # write_options=WriteOptions(batch_size=1_000, flush_interval=1_000))
+from pyrfc3339 import generate
+from dateutil.parser import parse
 
 start_prices = [13.31,60.71,342.84,16.47,15.4,1.49,5.48,15.8,16.2,17.03,19.18,7.11,5.51,18.49,5.14,730.78,2855.72,16.85,18.0,54.24,2.46,112.69,1.01,35.97,26.85,133.58,18.93,24.93,46.2,33.98,38.65,6.25,27.88,4.98,4.13,4.23,782.75,35.02,38.55,194.9,8.3,20.59,7.1,37.98,93.59,2.62,1228.78,42.23,8.29,8.0,23.65,1.95,27.84,30.85,25.87,21.95,6.21,46.97,47.38,13.07,8.13,21.5,22.21,3.08,41.93,3.2,26.0,7.05,6.89,25.9,8.7,11.28,3.7,6.0,26.6,2.42,4.6,3.33,20.33,20.28,21.58,61.0,58.99,23.0,23.55,211.2,9.0,254.68,49.8,130.59,15.19,13.85,180.26,39.9,48.0,225.94,60.57,194.1,28.7,31.4,30.55,15.9,19.99,17.9,4.3,34.89,33.22,33.39,61.2,8.77,16.3,16.4,204.89,3.4,8.08,7.5,4.68,7.04,242.5,61.19,124.3,15.7,191.41,7.68,413.31,0.99,11.9,4.39,9.47,33.35,19.4,12.0,24.29,29.85,28.19,31.2,18.4,21.67,14.0,16.0,8.1,7.36,37.33,32.0,19.0,74.54,23.55,4.3,6.0,65.96,25.01,250.01,26.35,20.45,4.59,67.6,6.01,4.78,19.69,4.6,8.39,16.88,12.35,14.8,122.13,29.08,7.38,6.93,161.71,160.66,25.08,4.62,98.58,8.2,65.75,6.25,163.7,162.73,1.6,31.29,1.51,8.99,6.82,29.3,330.41,79.16,30.29,439.98,5.91,1.5,0.71,41.55,83.44,180.91,13.39,12.11,30.05,35.44,9.8,10.5,11.58,3.3,1.9,489.07,22.8,7.0,14.79,166.1,4.48,2.87,15.88,8.94,15.0,19.7,37.68,24.65,16.56,218.48,33.08,0.82,27.39,1007.54,18.27,7.9,6.32,42.0,117.33,54.0,169.78,43.6,76.18,167.99,7.08,159.31,5.44,180.42,4.26,181.61,27.0,2.29,56.09,8.6,25.09,287.78,5.48,12.39,155.14,727.28,383.61,14.81,24.36,23.8,45.0,1016.08,283.11,13.61,34.97,1.5,17.45,18.97,80.99,37.58,417.78,25.41,22.55,164.93,4.0,347.73,2.25,8.4,1.4,310.0,220.0,3.25,4.07,2.25,1.45,98.0,51.7,5.17,3.1,9.35,12.89,57.0,16.71,2.99,3.0,6.79,9.14,2.7,1.37,5.4,6.94,29.75,13.11,7.43,7.1,21.61,8.4,159.09,5.31,22.41,20.85,42.76,16.75,10.56,60.4,31.96,244.75,31.59,159.63,21.9,15.55,7.71,7.38,6.99,41.9,42.92,17.66,26.46,26.5,4.18,28.58,37.95,8.47,7.6,23.75,1.45,2.5,30.0,22.79,31.26,12.35,362.67,27.52,2.05,2.03,10.05,11.85,35.68,27.08,1.77,4.15,67.5,69.3,2.31,20.33,1.62,2.75,53.2,37.5,37.52,36.87,131.82,92.57,11.41,9.21,9.0,70.92,50.01,213.48,509.86,41.59,46.24,17.9,144.32,7.2,4.4,88.21,17.62,4.21,7.01,5.07,40.0,65.94,76.92,1.58,1.5,2.84,0.86,9.36,1.7,5.52,5.21,1.83,2.15,2.95,1.25,1.28,3.66,1.13,2.2,2.24,1.54,1.7,8.29,0.47,0.03,0.81,0.02,17.3,157.8,1191.0,1336.21,99.0,2060.0,139.99,139.7,54.97,86.03,103.03,108.95,74.5,121.5,89.6,103.51,13.95,1.73,72.99,78.96,82.0,101.5,4.07,2231.0,1009.36,479.0,152.01,285.0,43.5,168.0,207.0,2270.82,1992.0,106.95,160.0,69.4,427.0,198.0,2.75,84.99,2.75,1240.0,87.49,325.0,124.49,195.0,134.9,98.99,302.0,91.9,237.99,114.0,173.0,139.98,149.0,102.5,195.0,154.0,105.0,109.4,70.04,102.2,105.49,109.6,109.0,9.79,146.22,107.73,1874.0,1065.89,91.99,92.83,10.24,222.5,31.02,149.0,125.0,93.9,102.95,20.2,99.99,77.31,100.42,3004.0,356.0,73.9,217.99,270.0,42.0,89.0,101.46,108.5,52.99,71.73,90.0,1150.0,84.64,128.5,11.19,106.01,921.0,75.24,81.0,124.0,122.4,123.98,175.0,76.21,106.99,108.0,89.01,118.49,69.2,94.96,112.5,100.29,107.79,17.89,69.0,84.6,87.92,71.63,48.0,93.65,98.0,0.18,0.22,0.85,0.27,0.29,31.32,102.69,31.3,0.53,151.09,87.4,103.5,89.9,103.0,1.0,0.73,0.4,0.4,0.5,6.06,0.95,9.41]
-now = datetime.datetime.now()
-# .replace(hour=0,minute=0,second=0)
-def random_number():
-    return random.choice([1, -1,0])*0.01
-    # 
+now = datetime.datetime.now(datetime.timezone.utc).astimezone()
+now = parse("2022-01-14 14:10:24.470174+00:00")
 
-
-
-def save_price(prices,time):
-    return [Point("price").tag("bond", bond).field("value", price_value).time(time) for bond, price_value in prices]
-    
 stock_order=[ "AALR3",
   "AAPL34",
   "ABBV34",
@@ -573,30 +556,32 @@ stock_order=[ "AALR3",
   "MYPK11",
   "MYPK12"]
 
+def random_number():
+    return random.choice([1, -1,0])*0.01
+def save_price(prices,time,file):
+
+    return [Point("price").tag("bond", bond).field("value", price_value).time(time) for bond, price_value in prices]
+
 current_price =start_prices
-def iter_bonds():
-    insert_time =now
-    for sec in range(3600):
-        insert_time = insert_time - datetime.timedelta(0,1)
-        print(insert_time)
-        for i,stock_name in enumerate(stock_order):
-            current_price[i] = current_price[i]+random_number()
-            # print(stock_name,insert_time,current_price[i])
-            yield Point("price").tag("bond", stock_name).field("value", current_price[i]).time(insert_time)
-
-# iterable= iter_bonds()
-# data = rx \
-#     .from_iterable(iterable) 
-
-# write_api.write(bucket="prices", record=data)
-# write_api.close()
 insert_time =now
-for day in range(1,365):
-    for sec in range(24):
-        for sec in range(1,3600):
-            prices = [(stock_order[i],v+random_number())for i,v in enumerate(start_prices)]
-            insert_time = insert_time - datetime.timedelta(0,1)
-            ts=save_price(prices,insert_time)    
-            print(insert_time)
-            write_api.write(bucket=bucket,org=org,record=ts)    
-        print(datetime.datetime.now(),insert_time)
+print(datetime.datetime.now(),now)
+for day in range(1,30):
+    with open('1_month.csv', 'w') as f:
+        a="""#group,false,false,false,false,true,true,true,
+#datatype,string,long,dateTime:RFC3339,double,string,string,string
+#default,_result,,,,,,
+,result,table,_time,_value,_field,_measurement,bond
+        """
+        f.write(a)
+        for sec in range(24):
+            w_str = ""
+            for sec in range(1,3600):
+                prices = [(stock_order[i],v+random_number())for i,v in enumerate(start_prices)]
+                insert_time = insert_time - datetime.timedelta(0,1)
+                for bond,price_value in prices:
+                    w_str+=f",,0,{generate(insert_time)},{round(price_value,2)},value,price,{bond};\n"
+            print(datetime.datetime.now())
+            f.write(w_str)
+            print(datetime.datetime.now(),insert_time)
+    os.remove("1_month.csv")
+    print('removed')
